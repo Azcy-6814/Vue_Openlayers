@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-14 16:28:25
- * @LastEditTime: 2022-03-10 14:43:36
+ * @LastEditTime: 2022-03-10 16:51:28
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \sail-vue3\src\components\olMap.vue
@@ -200,7 +200,7 @@
             const layersFly=(coor:Array<Number>):void=>{
                 state.map.getView().animate({
                     center: coor,
-                    zoom: 12,
+                    zoom: 14,
                     duration: 600,
                 });
                 return
@@ -340,10 +340,29 @@
                 })
             }
 
+            //视野初始化
+            const setInitialize=():void=>{
+                state.map.getView().animate({
+                    center: [104.06387329101562,30.670990790779168],
+                    zoom: 11,
+                    duration: 600,
+                });
+                return
+            }
+            //地图缩放获取当前层级
+            const move=()=>{
+                state.map.on('moveend', function () {
+                    let zoom = state.map.getView().getZoom();  //获取当前地图的缩放级别
+                    zoom=parseInt(zoom)
+                    context.emit('change',zoom)
+                });
+            }
+
             //挂载结束时
             onMounted(()=>{
                 addMap()
                 mapClick()
+                move()
             })
             
             return{
@@ -360,7 +379,9 @@
                 areaMeasure,
                 clearDraw,
                 plotting,
-                mapClick
+                mapClick,
+                setInitialize,
+                move
             }
             
         }

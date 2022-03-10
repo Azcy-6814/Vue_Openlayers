@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-14 15:14:09
- * @LastEditTime: 2022-03-10 10:38:18
+ * @LastEditTime: 2022-03-10 16:56:54
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \sail-vue3\src\views\Home.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="home" id="homeBox">
         <!-- 地图组件 -->
-        <Map ref="mapFn"></Map>
+        <Map ref="mapFn" @change='getZoom'> </Map>
         <!-- 底图选择组件 -->
         <CheckMap @change='checkLayer'></CheckMap>
         <!-- 撒点组件 -->
@@ -17,7 +17,19 @@
         <!-- 地图工具组件 -->
         <MapTools @change='Tools'></MapTools>
         <!-- 地图搜索组件 -->
-        <SearchBox @change="addPoint"></SearchBox>   
+        <SearchBox @change="addPoint"></SearchBox>
+        <!-- 当前地图层级 -->
+        <div class="zoom">
+            <div>
+                层级:{{zoom}}
+            </div> 
+        </div>
+        <!-- 初始化视野 -->
+        <div class="initialize" @click="initializeFly">
+            <div>
+                <BankOutlined/>
+            </div>    
+        </div>   
   </div>
 </template>
 
@@ -30,10 +42,14 @@
     // import GetPoint from '@/components/home/addPoint/addPoint.vue';//引入撒点组件
     import MapTools from '@/components/home/mapTools/mapTools.vue';//引入地图工具组件
     import SearchBox from '@/components/home/search/search.vue';//引入搜索POI组件
+    import {
+        BankOutlined,
+    } from '@ant-design/icons-vue';
     const mapFn:any = ref('')
     let state:AnyObject = reactive({
         //获取public文件夹
         baseURL:process.env.BASE_URL,
+        zoom:'11',
     })
     export default defineComponent({
         components: {
@@ -41,7 +57,8 @@
             CheckMap,
             // GetPoint,
             MapTools,
-            SearchBox
+            SearchBox,
+            BankOutlined
         },
         setup(){
             /**
@@ -91,6 +108,25 @@
                         break
                 }
             }
+
+            /**
+            * @description: 视野初始化
+            * @param {*} 
+            * @return {*} :调用地图组件对应方法
+            */
+            const initializeFly=():void=>{
+                return mapFn.value.setInitialize()
+            }
+
+            /**
+            * @description: 获取当前层级
+            * @param {*} :地图组件返回的当前层级
+            * @return {*} :
+            */
+            const getZoom=(data:string)=>{
+                return state.zoom=data
+            }
+
             onMounted(()=>{
                 
             })
@@ -100,6 +136,8 @@
                 addPoint,
                 checkLayer,
                 Tools,
+                initializeFly,
+                getZoom
             }
         }
     })

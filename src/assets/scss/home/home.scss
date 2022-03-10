@@ -3,4 +3,45 @@
     height: 100vh;
     margin: 0;
     padding: 0;
+    .zoom{
+        position: absolute;
+        left: 8px;
+        bottom: 8px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+        width: 52px;
+        height: 24.25px;
+        div{
+            width: 52px;
+            height: 24.25px;
+            text-align: center;
+            line-height: 24.25px;
+            // background-color: rgba(73, 120, 181, 0.7);
+            // margin: 3px 0 0 3px;
+            // border-radius: 2px;
+            font-size: 11px;
+            color: #fff;
+        }  
+    }
+    .initialize{
+        position: absolute;
+        right: 14px;
+        bottom: 142px;
+        background-color: rgba(255, 255, 255, 0.4);
+        border-radius: 4px;
+        width: 24.25px;
+        height: 24.25px;
+        cursor: pointer;
+        div{
+            width: 18.25px;
+            height: 18.25px;
+            text-align: center;
+            line-height: 18.25px;
+            background-color: rgba(73, 120, 181, 0.7);
+            margin: 3px 0 0 3px;
+            border-radius: 2px;
+            font-size: 11px;
+            color: #fff;
+        }
+    }
 }
