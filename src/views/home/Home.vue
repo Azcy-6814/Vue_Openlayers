@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-14 15:14:09
- * @LastEditTime: 2022-03-07 16:59:57
+ * @LastEditTime: 2022-03-10 10:38:18
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \sail-vue3\src\views\Home.vue
@@ -13,9 +13,11 @@
         <!-- 底图选择组件 -->
         <CheckMap @change='checkLayer'></CheckMap>
         <!-- 撒点组件 -->
-        <GetPoint @change='addPoint'></GetPoint>
+        <!-- <GetPoint @change='addPoint'></GetPoint> -->
         <!-- 地图工具组件 -->
         <MapTools @change='Tools'></MapTools>
+        <!-- 地图搜索组件 -->
+        <SearchBox @change="addPoint"></SearchBox>   
   </div>
 </template>
 
@@ -25,8 +27,9 @@
     import "@/assets/scss/home/home.scss";
     import Map from '@/components/olMap.vue';//引入地图组件
     import CheckMap from '@/components/home/checkMap/checkMap.vue';//引入底图选择组件
-    import GetPoint from '@/components/home/addPoint/addPoint.vue';//引入撒点组件
+    // import GetPoint from '@/components/home/addPoint/addPoint.vue';//引入撒点组件
     import MapTools from '@/components/home/mapTools/mapTools.vue';//引入地图工具组件
+    import SearchBox from '@/components/home/search/search.vue';//引入搜索POI组件
     const mapFn:any = ref('')
     let state:AnyObject = reactive({
         //获取public文件夹
@@ -36,8 +39,9 @@
         components: {
             Map,
             CheckMap,
-            GetPoint,
-            MapTools
+            // GetPoint,
+            MapTools,
+            SearchBox
         },
         setup(){
             /**
@@ -55,9 +59,7 @@
             * @return {*} 地图组件添加撒点图层
             */
             const addPoint=(data:AnyObject):void=>{
-                if(data==null){
-                    return mapFn.value.clearLayers()
-                }else{
+                if(data!=null){
                     return mapFn.value.addPoint(data)
                 }
             }

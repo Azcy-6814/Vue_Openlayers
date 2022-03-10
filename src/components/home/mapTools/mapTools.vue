@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-03 13:49:22
- * @LastEditTime: 2022-03-07 13:17:11
+ * @LastEditTime: 2022-03-09 14:05:12
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \sail-vue3\src\components\home\mapTools\mapTools.vue
@@ -26,12 +26,6 @@
 <script lang='ts'>
 import { defineComponent,VNodeChild } from 'vue'
 export interface AnyObject { [key: string]: any }
-interface MenuInfo {
-  key: string;
-  keyPath: string[];
-  item: VNodeChild;
-  domEvent: MouseEvent;
-}
 import { ref, onMounted ,reactive,toRefs } from 'vue' // vue相关方法
 import {Dropdown,Menu} from 'ant-design-vue'//安装2.1.3版本
 let state:AnyObject = reactive({
