@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-14 16:28:25
- * @LastEditTime: 2022-03-10 16:51:28
+ * @LastEditTime: 2022-03-10 17:39:28
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \sail-vue3\src\components\olMap.vue
@@ -73,7 +73,7 @@
                     zIndex: 1,
                 }  
             )
-            //地图定制
+            //天地图卫星影像
             const customizationMap:AnyObject =new TileLayer(
                 {
                     source: new XYZ({
@@ -141,7 +141,7 @@
             * @param {*} :WKT数据
             * @return {*} :
             */
-            const addPoint=(data:AnyObject):void=>{
+            const addPoint=(data:AnyObject,msg:String):void=>{
                 const pointAll:AnyObject=JSON.parse(JSON.stringify(data));
 
                 if(state.pointAll!=null){
@@ -157,7 +157,9 @@
 
                 state.map.addLayer(state.pointAll);
                 for(let i=0;i<pointAll.length;i++){
-                    if(i===0){
+                    if(i===0 && msg==''){
+                        setInitialize()
+                    }else{
                         layersFly(pointAll[i].location)
                     }
                     let coordinate:Array<any>= fromLonLat(pointAll[i].location,'EPSG:4326');
@@ -249,7 +251,6 @@
                 });
                 return;
             }
-
 
             //清除地图绘画
             const clearDraw=():void=>{

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-14 15:14:09
- * @LastEditTime: 2022-03-10 16:56:54
+ * @LastEditTime: 2022-03-11 15:27:34
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \sail-vue3\src\views\Home.vue
@@ -72,12 +72,12 @@
 
             /**
             * @description: 撒点
-            * @param {*} data wkt数据
+            * @param {*} :data(点位数据),msg(输入框内容)
             * @return {*} 地图组件添加撒点图层
             */
-            const addPoint=(data:AnyObject):void=>{
+            const addPoint=(data:AnyObject,msg:String):void=>{
                 if(data!=null){
-                    return mapFn.value.addPoint(data)
+                    return mapFn.value.addPoint(data,msg)
                 }
             }
 
@@ -127,9 +127,7 @@
                 return state.zoom=data
             }
 
-            onMounted(()=>{
-                
-            })
+            
             return{
                 ...toRefs(state),
                 mapFn,
