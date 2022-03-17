@@ -3,6 +3,11 @@
     height: 100vh;
     margin: 0;
     padding: 0;
+    .btn{
+        position: absolute;
+        left: 50%;
+        top: 10px;
+    }
     .zoom{
         position: absolute;
         left: 8px;

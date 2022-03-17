@@ -1,10 +1,10 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-14 15:14:09
- * @LastEditTime: 2022-03-11 15:27:34
+ * @LastEditTime: 2022-03-15 17:40:59
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \sail-vue3\src\views\Home.vue
+ * @FilePath: \Vue_Openlayers\src\views\home\Home.vue
 -->
 <template>
   <div class="home" id="homeBox">
@@ -12,12 +12,13 @@
         <Map ref="mapFn" @change='getZoom'> </Map>
         <!-- 底图选择组件 -->
         <CheckMap @change='checkLayer'></CheckMap>
-        <!-- 撒点组件 -->
-        <!-- <GetPoint @change='addPoint'></GetPoint> -->
         <!-- 地图工具组件 -->
         <MapTools @change='Tools'></MapTools>
         <!-- 地图搜索组件 -->
         <SearchBox @change="addPoint"></SearchBox>
+        <!-- 按钮组件 -->
+        <Btn ref="btnFn" class="btn" @change="btnFunction"></Btn>
+        <Pop ref="PopFn"></Pop>
         <!-- 当前地图层级 -->
         <div class="zoom">
             <div>
@@ -29,7 +30,7 @@
             <div>
                 <BankOutlined/>
             </div>    
-        </div>   
+        </div>
   </div>
 </template>
 
@@ -39,13 +40,16 @@
     import "@/assets/scss/home/home.scss";
     import Map from '@/components/olMap.vue';//引入地图组件
     import CheckMap from '@/components/home/checkMap/checkMap.vue';//引入底图选择组件
-    // import GetPoint from '@/components/home/addPoint/addPoint.vue';//引入撒点组件
     import MapTools from '@/components/home/mapTools/mapTools.vue';//引入地图工具组件
     import SearchBox from '@/components/home/search/search.vue';//引入搜索POI组件
-    import {
+    import Btn from '@/components/button.vue'
+    import Pop from '@/components/Pop.vue'
+    import { 
         BankOutlined,
     } from '@ant-design/icons-vue';
     const mapFn:any = ref('')
+    const btnFn:any = ref('')
+    const PopFn:any = ref('')
     let state:AnyObject = reactive({
         //获取public文件夹
         baseURL:process.env.BASE_URL,
@@ -55,10 +59,11 @@
         components: {
             Map,
             CheckMap,
-            // GetPoint,
             MapTools,
             SearchBox,
-            BankOutlined
+            BankOutlined,
+            Btn,
+            Pop
         },
         setup(){
             /**
@@ -123,19 +128,113 @@
             * @param {*} :地图组件返回的当前层级
             * @return {*} :
             */
-            const getZoom=(data:string)=>{
-                return state.zoom=data
+            const getZoom=(data:string):void=>{
+                state.zoom=data
+                return 
             }
-
+            /**
+            * @description: 按钮点击事件
+            * @param {*} :点击按钮的名称
+            * @return {*} :
+            */
+            const btnFunction=(data:string):void=>{
+                switch(data){
+                    case '地图定制':
+                        PopFn.value.dialogFormVisible=true;//弹窗显隐
+                        PopFn.value.popWidth='25%'//弹窗的宽度
+                        PopFn.value.formLabelWidth='80px'//表单label的宽度
+                        PopFn.value.popTitle='测试工具'//弹框标题
+                        PopFn.value.showInput=true//input模块
+                        PopFn.value.showSelect=true//select模块
+                        PopFn.value.showRadio=true//radio模块
+                        PopFn.value.popInput=[//盒子
+                            {
+                                label:'瓦片地址',//标题
+                                model:'',//内容
+                                placeholder:'http://123.456.789.12:8080/mapTile/Map/tile/{z}/{y}/{x}',//提示
+                            }
+                        ]
+                        PopFn.value.popOption=[//盒子
+                            {
+                                label:'投影坐标',//标题
+                                popSelect:'',//结果
+                                option:['EPSG:4326','EPSG:3857'],//选项
+                                placeholder:'请选择',//提示
+                            }
+                        ]
+                        PopFn.value.popRadio=[//盒子
+                            {
+                                label:'格式选择',//标题
+                                value:'',//结果
+                                option:[//选项
+                                    {
+                                        disabled:false,//是否禁用
+                                        title:'JPG',//内容
+                                    },
+                                    {
+                                        disabled:false,//是否禁用
+                                        title:'PNG',//内容
+                                    }
+                                ]
+                            },
+                        ]
+                        break;
+                }
+            }
+            
+            onMounted(()=>{
+                //按钮属性
+                const buttonContent=[
+                    {
+                        title:'地图定制',//按钮内容
+                        size:'default',//尺寸:large / default /small
+                        type:'primary',//按钮类型:primary / success / warning / danger / info / text
+                        disabled:false,//是否为禁用状态
+                        icon:null,//icon小图标
+                        plain:true,//是否为朴素按钮
+                        round:false,//是否为圆角按钮
+                        circle:false,//是否为圆形按钮
+                        loading:false,//是否为加载中状态
+                        loadingIcon:null,//自定义加载中图标
+                        autofocus:false,//原生 autofocus 属性
+                        nativeType:null,//原生 type 属性
+                        autoInsertSpace:false,//自动在两个中文字符之间插入空格	
+                    },
+                    {
+                        title:'清除测试',//按钮内容
+                        size:'default',//尺寸:large / default /small
+                        type:'danger',//按钮类型:primary / success / warning / danger / info / text
+                        disabled:false,//是否为禁用状态
+                        icon:null,//icon小图标
+                        plain:true,//是否为朴素按钮
+                        round:false,//是否为圆角按钮
+                        circle:false,//是否为圆形按钮
+                        loading:false,//是否为加载中状态
+                        loadingIcon:null,//自定义加载中图标
+                        autofocus:false,//原生 autofocus 属性
+                        nativeType:null,//原生 type 属性
+                        autoInsertSpace:false,//自动在两个中文字符之间插入空格	
+                    },
+                ]
+                /**
+                * @description: 创建按钮
+                * @param {*} :按钮属性
+                * @return {*} :
+                */
+                btnFn.value.getButtonContent(buttonContent)
+            })
             
             return{
                 ...toRefs(state),
                 mapFn,
+                btnFn,
+                PopFn,
                 addPoint,
                 checkLayer,
                 Tools,
                 initializeFly,
-                getZoom
+                getZoom,
+                btnFunction
             }
         }
     })

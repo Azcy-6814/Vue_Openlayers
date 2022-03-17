@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-03 13:49:22
- * @LastEditTime: 2022-03-10 18:01:35
+ * @LastEditTime: 2022-03-15 13:51:32
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \sail-vue3\src\components\home\mapTools\mapTools.vue
@@ -68,23 +68,6 @@ export default defineComponent({
                 ]
             },
             {
-                name:'测试',
-                children:[
-                    {
-                        name:'底图'
-                    },
-                    {
-                        name:'撒点'
-                    },
-                    {
-                        name:'加线'
-                    },
-                    {
-                        name:'加面'
-                    }
-                ]
-            },
-            {
                 name:'清除',
                 children:null
             },
@@ -95,7 +78,7 @@ export default defineComponent({
         * @param {*} 
         * @return {*} :
         */
-        const clear=(type)=>{
+        const clear=(type:string)=>{
             if(type==='清除'){
                 context.emit('change',type)
             }
@@ -107,7 +90,7 @@ export default defineComponent({
         * @param {*} 
         * @return {*} :功能名称
         */
-        const change=(type)=>{
+        const change=(type:string)=>{
             context.emit('change',type)
         }
 

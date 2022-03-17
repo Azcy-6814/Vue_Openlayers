@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-14 16:28:25
- * @LastEditTime: 2022-03-10 17:39:28
+ * @LastEditTime: 2022-03-15 11:35:25
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \sail-vue3\src\components\olMap.vue
@@ -220,7 +220,7 @@
             const lengthMeasure=():void=>{
                 if(state.measure===true){
                     //vue3.0无法使用外部引入的删除测量功能 Measure.clearDraw()
-                    state.map.getInteractions().forEach(function (interaction) {
+                    state.map.getInteractions().forEach(function (interaction:AnyObject) {
                         if(interaction instanceof olInteraction.Draw){
                             state.map.removeInteraction(interaction);
                         }
@@ -238,7 +238,7 @@
             const areaMeasure=():void=>{
                 if(state.measure===true){
                     //vue3.0无法使用外部引入的删除测量功能 Measure.clearDraw()
-                    state.map.getInteractions().forEach(function (interaction) {
+                    state.map.getInteractions().forEach(function (interaction:AnyObject) {
                         if(interaction instanceof olInteraction.Draw){
                             state.map.removeInteraction(interaction);
                         }
@@ -257,7 +257,7 @@
                 //清除测量工具
                 if(state.measure===true){
                     //vue3.0无法使用外部引入的删除测量功能 Measure.clearDraw()
-                    state.map.getInteractions().forEach(function (interaction) {
+                    state.map.getInteractions().forEach(function (interaction:AnyObject) {
                         if(interaction instanceof olInteraction.Draw){
                             state.map.removeInteraction(interaction);
                         }
@@ -336,7 +336,7 @@
 
             //地图添加点击事件
             const mapClick=():void=>{
-                state.map.on('singleclick',function(e) {
+                state.map.on('singleclick',function(e:AnyObject) {
                     return console.log(e.coordinate)
                 })
             }
