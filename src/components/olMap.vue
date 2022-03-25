@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-14 16:28:25
- * @LastEditTime: 2022-03-15 11:35:25
+ * @LastEditTime: 2022-03-18 17:52:18
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \sail-vue3\src\components\olMap.vue
@@ -31,6 +31,7 @@
     import {fromLonLat} from 'ol/proj';
     import Point from 'ol/geom/Point';
     import * as olInteraction from 'ol/interaction';
+import { de } from 'element-plus/lib/locale';
 
     //获取public文件夹
     const baseURL = process.env.BASE_URL;
@@ -50,7 +51,8 @@
 
     export default defineComponent({
         setup(props,context){
-            const mapToken='e0a1aa6cc57edf2692f9c53d4936a97e'
+            //天地图Token
+            const mapToken='e0a1aa6cc57edf2692f9c53d4936a97e';
             //天地图矢量底图
             const baseMap:AnyObject =new TileLayer(
                 {
@@ -61,7 +63,7 @@
                     //图层容器层级
                     zIndex: 1,
                 }  
-            )
+            );
             //天地图矢量标注
             const labelMap:AnyObject =new TileLayer(
                 {
@@ -72,9 +74,9 @@
                     //图层容器层级
                     zIndex: 1,
                 }  
-            )
+            );
             //天地图卫星影像
-            const customizationMap:AnyObject =new TileLayer(
+            const satelliteMap:AnyObject =new TileLayer(
                 {
                     source: new XYZ({
                         url: "http://t3.tianditu.com/DataServer?T=img_c&x={x}&y={y}&l={z}&tk="+mapToken,
@@ -83,8 +85,10 @@
                     //图层容器层级
                     zIndex: 1,
                 }  
-            )
-
+            );
+            //地图定制
+            let customizationMap:AnyObject =ref()
+            
             /**
             * @description: 地图创建
             * @param {*} :
@@ -93,12 +97,11 @@
             const addMap=():void=>{
                 state.layers.push(baseMap);
                 state.layers.push(labelMap);
-                state.layers.push(customizationMap);
+                state.layers.push(satelliteMap);
                 state.map= new Map({
                     target: 'map',
                     layers:state.layers,
                     view: new View({
-                        // center:[93.6814904389711, 31.480876176873185],//中心点(wkt形式撒点使用)
                         center:[104.06387329101562,30.670990790779168],//中心点(wkt形式撒点使用)
                         projection: 'EPSG:4326',//(wkt形式撒点使用)
                         zoom:11,    //初始化地图级别
@@ -109,7 +112,7 @@
                 })
                 baseMap.setVisible(true);
                 labelMap.setVisible(true);
-                customizationMap.setVisible(false);
+                satelliteMap.setVisible(false);
                 return state.map;
             }
 
@@ -124,14 +127,12 @@
                     case 0:
                         baseMap.setVisible(true);
                         labelMap.setVisible(true);
-                        customizationMap.setVisible(false);
-                        state.map.getView().setZoom(11);
+                        satelliteMap.setVisible(false);
                     break;
                     case 1:
                         baseMap.setVisible(false);
                         labelMap.setVisible(false);
-                        customizationMap.setVisible(true);
-                        state.map.getView().setZoom(13);
+                        satelliteMap.setVisible(true);
                 }
                 return state.map;
             }
@@ -202,7 +203,7 @@
             const layersFly=(coor:Array<Number>):void=>{
                 state.map.getView().animate({
                     center: coor,
-                    zoom: 14,
+                    zoom: 12,
                     duration: 600,
                 });
                 return
@@ -270,7 +271,7 @@
                     state.plottingSource.clear();
                     state.map.removeInteraction(state.plottingNow);
                 }
-                return
+                return;
             }
 
             /**
@@ -350,13 +351,56 @@
                 });
                 return
             }
+
             //地图缩放获取当前层级
-            const move=()=>{
+            const move=():void=>{
                 state.map.on('moveend', function () {
                     let zoom = state.map.getView().getZoom();  //获取当前地图的缩放级别
                     zoom=parseInt(zoom)
                     context.emit('change',zoom)
                 });
+                return;
+            }
+
+            /**
+            * @description: 地图定制
+            * @param {*} :底图属性
+            * @return {*} :
+            */
+            const customizationFn=(data)=>{
+                let url:string
+                if((data.input1+'').indexOf(',')===-1){
+                    return
+                }else{
+                    let center=(data.input1+'').split(',')
+                    layersFly([Number(center[0]),Number(center[1])])
+                }
+                if(data.radio0==='无'){
+                    url=data.input0
+                }else{
+                    url=data.input0+'.'+data.radio0
+                }
+                
+                if(customizationMap!=undefined){
+                    state.map.removeLayer(customizationMap)
+                }
+                //地图定制
+                customizationMap=new TileLayer(
+                    {
+                        source:new XYZ({
+                            url,
+                            projection: data.select0
+                        }),
+                        //图层容器层级
+                        zIndex: 997,
+                    });
+                customizationMap.set('id','customization')
+                state.map.addLayer(customizationMap)
+            }
+
+            //清除地图定制
+            const removeCustomizationFn=():void=>{
+                state.map.removeLayer(customizationMap)
             }
 
             //挂载结束时
@@ -371,6 +415,7 @@
                 mapToken,
                 baseMap,
                 labelMap,
+                satelliteMap,
                 customizationMap,
                 addPoint,
                 layersFly,
@@ -382,7 +427,9 @@
                 plotting,
                 mapClick,
                 setInitialize,
-                move
+                move,
+                customizationFn,
+                removeCustomizationFn
             }
             
         }

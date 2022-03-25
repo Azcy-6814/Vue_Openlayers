@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-14 15:14:09
- * @LastEditTime: 2022-03-15 17:40:59
+ * @LastEditTime: 2022-03-18 15:33:02
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \Vue_Openlayers\src\views\home\Home.vue
@@ -18,7 +18,7 @@
         <SearchBox @change="addPoint"></SearchBox>
         <!-- 按钮组件 -->
         <Btn ref="btnFn" class="btn" @change="btnFunction"></Btn>
-        <Pop ref="PopFn"></Pop>
+        <Pop ref="PopFn" @change="popFunction"></Pop>
         <!-- 当前地图层级 -->
         <div class="zoom">
             <div>
@@ -132,6 +132,7 @@
                 state.zoom=data
                 return 
             }
+
             /**
             * @description: 按钮点击事件
             * @param {*} :点击按钮的名称
@@ -152,6 +153,15 @@
                                 label:'瓦片地址',//标题
                                 model:'',//内容
                                 placeholder:'http://123.456.789.12:8080/mapTile/Map/tile/{z}/{y}/{x}',//提示
+                                clearable:true,//清空按钮
+                                disabled:false,//禁用
+                            },
+                            {
+                                label:'中心点',//标题
+                                model:'',//内容
+                                placeholder:'104.063873,30.670990',//提示
+                                clearable:true,//清空按钮
+                                disabled:false,//禁用
                             }
                         ]
                         PopFn.value.popOption=[//盒子
@@ -169,6 +179,10 @@
                                 option:[//选项
                                     {
                                         disabled:false,//是否禁用
+                                        title:'无',//内容
+                                    },
+                                    {
+                                        disabled:false,//是否禁用
                                         title:'JPG',//内容
                                     },
                                     {
@@ -179,7 +193,19 @@
                             },
                         ]
                         break;
+                    case '清除定制':
+                        mapFn.value.removeCustomizationFn()
+                        break
                 }
+            }
+
+            /**
+            * @description: 地图定制弹框form表单确认
+            * @param {*} :表单提交的内容
+            * @return {*} :
+            */
+            const popFunction=(data)=>{
+                mapFn.value.customizationFn(data)
             }
             
             onMounted(()=>{
@@ -201,7 +227,7 @@
                         autoInsertSpace:false,//自动在两个中文字符之间插入空格	
                     },
                     {
-                        title:'清除测试',//按钮内容
+                        title:'清除定制',//按钮内容
                         size:'default',//尺寸:large / default /small
                         type:'danger',//按钮类型:primary / success / warning / danger / info / text
                         disabled:false,//是否为禁用状态
@@ -234,7 +260,8 @@
                 Tools,
                 initializeFly,
                 getZoom,
-                btnFunction
+                btnFunction,
+                popFunction
             }
         }
     })
